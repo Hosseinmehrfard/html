@@ -3,44 +3,8 @@
 session_start();
 require_once 'mysql.php';
 
-/*
-CREATE TABLE login_logs (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    ip_address VARCHAR(45) NOT NULL,
-    user_agent TEXT,
-    referer TEXT,
-    login_status INT,
-    username VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
-);
-
-*/
-
-/**
- * Persist a record of the login attempt without interrupting the login flow.
- */
-function log_login_attempt(PDO $connection, string $username, int $status): void
-{
-    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-    $referer = $_SERVER['HTTP_REFERER'] ?? '';
-
-    try {
-        $logStmt = $connection->prepare(
-            'INSERT INTO login_logs (ip_address, user_agent, referer, login_status, username)
-             VALUES (:ip, :ua, :referer, :status, :username)'
-        );
-        $logStmt->execute([
-            ':ip' => $ipAddress,
-            ':ua' => $userAgent,
-            ':referer' => $referer,
-            ':status' => $status,
-            ':username' => $username,
-        ]);
-    } catch (PDOException $e) {
-        error_log('Failed to log login attempt: ' . $e->getMessage());
-    }
+function get_ip_adress() {
+    return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 }
 
 /*
@@ -105,7 +69,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    log_login_attempt($connection, $username, $loginStatus);
+    // Record the attempt so admins can keep an eye on logins.
+    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+
+    try {
+        $logStmt = $connection->prepare(
+            'INSERT INTO login_logs (ip_address, user_agent, referer, login_status, username)
+             VALUES (:ip, :ua, :referer, :status, :username)'
+        );
+        $logStmt->execute([
+            ':ip' => $ipAddress,
+            ':ua' => $userAgent,
+            ':referer' => $referer,
+            ':status' => $loginStatus,
+            ':username' => $username,
+        ]);
+    } catch (PDOException $e) {
+        error_log('Failed to log login attempt: ' . $e->getMessage());
+    }
 }
 
 /*

@@ -14,6 +14,7 @@ $invitation_code = trim($_POST['invitation_code'] ?? '');
 
 $error = '';
 $success = '';
+$should_redirect = false;
 
 /*
 GUIDE 2: VALIDATE INPUT
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $connection->commit();
 
                     $success = 'Registration complete! Redirecting you to the login page in 3 seconds.';
-                    echo '<meta http-equiv="refresh" content="3;url=/login.php">';
+                    $should_redirect = true;
                 } catch (PDOException $e) {
                     if ($connection->inTransaction()) {
                         $connection->rollBack();
@@ -103,58 +104,74 @@ GUIDE 5: SHOW THE FORM
 - Keep the form fields filled with what the user typed (except the password).
 */
 ?>
+<!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/styles.css">
+    <?php if ($should_redirect): ?>
+        <meta http-equiv="refresh" content="3;url=/login.php">
+    <?php endif; ?>
+</head>
 <body>
-    <h1>Register</h1>
+    <div class="card">
+        <h1>Register</h1>
 
-    <?php if ($error !== ''): ?>
-        <p class="error"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
-    <?php elseif ($success !== ''): ?>
-        <p class="success"><?php echo htmlspecialchars($success, ENT_QUOTES, 'UTF-8'); ?></p>
-    <?php endif; ?>
+        <?php if ($error !== ''): ?>
+            <p class="message error"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
+        <?php elseif ($success !== ''): ?>
+            <p class="message success"><?php echo htmlspecialchars($success, ENT_QUOTES, 'UTF-8'); ?></p>
+        <?php endif; ?>
 
-    <?php if ($success === ''): ?>
-        <form method="POST" action="/register.php" accept-charset="UTF-8" autocomplete="on" novalidate>
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input id="name" name="name" type="text" placeholder="Your name"
-                       required minlength="1" maxlength="100"
-                       value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" />
+        <?php if ($success === ''): ?>
+            <form method="POST" action="/register.php" accept-charset="UTF-8" autocomplete="on" novalidate>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input id="name" name="name" type="text" placeholder="Your name"
+                           required minlength="1" maxlength="100"
+                           value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" />
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" placeholder="example"
+                           required minlength="1" maxlength="20" pattern="[A-Za-z0-9\-]+"
+                           title="Alphanumeric characters and hyphens only"
+                           value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" name="email" type="email" placeholder="example@example.com"
+                           required minlength="1" maxlength="100"
+                           value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>" />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="Your password"
+                           required minlength="4" maxlength="24" />
+                </div>
+
+                <div class="form-group">
+                    <label for="invitation_code">Invitation Code</label>
+                    <input id="invitation_code" name="invitation_code" type="text" placeholder="ABCD!@#1234"
+                           required minlength="4" maxlength="200" pattern="[A-Za-z0-9\-]+"
+                           title="Alphanumeric characters and hyphens only"
+                           value="<?php echo htmlspecialchars($invitation_code, ENT_QUOTES, 'UTF-8'); ?>" />
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">Register</button>
+                </div>
+            </form>
+
+            <div class="links links-compact">
+                <a class="btn" href="/login.php">Already registered? Login</a>
             </div>
-
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input id="username" name="username" type="text" placeholder="example"
-                       required minlength="1" maxlength="20" pattern="[A-Za-z0-9\-]+"
-                       title="Alphanumeric characters and hyphens only"
-                       value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" />
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input id="email" name="email" type="email" placeholder="example@example.com"
-                       required minlength="1" maxlength="100"
-                       value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>" />
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input id="password" name="password" type="password" placeholder="Your password"
-                       required minlength="4" maxlength="24" />
-            </div>
-
-            <div class="form-group">
-                <label for="invitation_code">Invitation Code</label>
-                <input id="invitation_code" name="invitation_code" type="text" placeholder="ABCD!@#1234"
-                       required minlength="4" maxlength="200" pattern="[A-Za-z0-9\-]+"
-                       title="Alphanumeric characters and hyphens only"
-                       value="<?php echo htmlspecialchars($invitation_code, ENT_QUOTES, 'UTF-8'); ?>" />
-            </div>
-
-            <div class="form-group">
-                <button type="submit">Register</button>
-            </div>
-        </form>
-    <?php endif; ?>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
