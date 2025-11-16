@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="//static.owaspzero-x.ir/styles.css">
 </head>
 <body>
+    <div class="home-link">
+        <a class="btn" href="/index.php"><span class="icon">&#8962;</span>Home</a>
+    </div>
     <div class="card">
         <h1>Welcome</h1>
         <p class="lead">

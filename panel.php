@@ -17,9 +17,12 @@ $createdAt = $_SESSION['created_at'] ?? '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Panel</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="//static.owaspzero-x.ir/styles.css">
 </head>
 <body>
+    <div class="home-link">
+        <a class="btn" href="/index.php"><span class="icon">&#8962;</span>Home</a>
+    </div>
     <div class="card">
         <h1>User Panel</h1>
         <p class="lead">Welcome back, <?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>.</p>
@@ -35,10 +38,6 @@ $createdAt = $_SESSION['created_at'] ?? '';
                 <li><span>Member Since</span><strong><?php echo htmlspecialchars($createdAt, ENT_QUOTES, 'UTF-8'); ?></strong></li>
             <?php endif; ?>
         </ul>
-
-        <div class="links">
-            <a href="/index.php">Go Home</a>
-        </div>
     </div>
 </body>
 </html>

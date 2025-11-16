@@ -110,12 +110,15 @@ GUIDE 5: SHOW THE FORM
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="//static.owaspzero-x.ir/styles.css">
     <?php if ($should_redirect): ?>
         <meta http-equiv="refresh" content="3;url=/login.php">
     <?php endif; ?>
 </head>
 <body>
+    <div class="home-link">
+        <a class="btn" href="/index.php"><span class="icon">&#8962;</span>Home</a>
+    </div>
     <div class="card">
         <h1>Register</h1>
 

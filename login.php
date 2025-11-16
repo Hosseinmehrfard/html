@@ -103,12 +103,15 @@ GUIDE 5: RENDER THE PAGE
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="//static.owaspzero-x.ir/styles.css">
     <?php if ($is_success): ?>
         <meta http-equiv="refresh" content="3;url=/panel.php">
     <?php endif; ?>
 </head>
 <body>
+    <div class="home-link">
+        <a class="btn" href="/index.php"><span class="icon">&#8962;</span>Home</a>
+    </div>
     <div class="card">
         <h1>Login</h1>
 
@@ -140,6 +143,7 @@ GUIDE 5: RENDER THE PAGE
             </form>
             <div class="links links-compact">
                 <a class="btn" href="/register.php">Need an account? Register</a>
+                <a class="btn" href="/forget_password.php">Forgot password?</a>
             </div>
         <?php endif; ?>
     </div>
